@@ -5,7 +5,7 @@ export function Hero() {
   return (
     <section
       id="top"
-      className="relative overflow-hidden bg-[#050505] pb-14 pt-28 md:pb-20 md:pt-32"
+      className="relative overflow-hidden bg-[#050505] pb-10 pt-28 md:pb-12 md:pt-32"
     >
       {/* gold decorative curves */}
       <div
@@ -48,7 +48,7 @@ export function Hero() {
         </div>
       </div>
 
-      <div className="relative mx-auto mt-8 flex max-w-[1400px] justify-center px-6 md:mt-0 md:justify-end md:px-16">
+      <div className="relative mx-auto mt-6 flex max-w-[1400px] justify-center px-6 md:-mt-16 md:justify-end md:px-16">
         <img
           src={logo}
           alt="AlBaris Mandhi & Grills"
