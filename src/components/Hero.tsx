@@ -1,5 +1,27 @@
-import heroDish from "@/assets/hero-mandhi.jpg";
 import logo from "@/assets/logo.png";
+import mandi1 from "@/assets/gallery-mandi-1.png";
+import mandi2 from "@/assets/gallery-mandi-2.png";
+import mandi3 from "@/assets/gallery-mandi-3.png";
+import { CircularGallery, type GalleryItem } from "@/components/ui/circular-gallery";
+
+const heroGallery: GalleryItem[] = [
+  {
+    common: "Chicken Mandhi",
+    binomial: "slow-cooked classic",
+    photo: { url: mandi1, text: "Chicken mandhi platter with saffron rice" },
+  },
+  {
+    common: "Peri Peri Alfaham",
+    binomial: "charcoal grilled",
+    photo: { url: mandi2, text: "Peri peri al faham grilled chicken platter" },
+  },
+  {
+    common: "Mutton Mandhi",
+    binomial: "rich & aromatic",
+    photo: { url: mandi3, text: "Mutton mandhi platter with long grain rice" },
+  },
+];
+
 
 export function Hero() {
   return (
