@@ -57,16 +57,11 @@ export function Hero() {
 
         <div className="relative order-1 md:order-2">
           <div className="relative mx-auto aspect-square w-full max-w-[560px] rounded-full border border-gold/25 p-3">
-            <div className="h-full w-full overflow-hidden rounded-full ring-1 ring-gold/20">
-              <img
-                src={heroDish}
-                alt="Arabian mandhi platter with roasted chicken and golden rice"
-                width={1200}
-                height={1200}
-                className="h-full w-full object-cover"
-              />
+            <div className="relative h-full w-full rounded-full ring-1 ring-gold/20">
+              <CircularGallery items={heroGallery} radius={190} autoRotateSpeed={0.25} />
             </div>
           </div>
+
         </div>
       </div>
 
