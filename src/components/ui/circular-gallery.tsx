@@ -60,7 +60,7 @@ const CircularGallery = React.forwardRef<HTMLDivElement, CircularGalleryProps>(
             return (
               <div
                 key={item.common}
-                className="absolute left-1/2 top-1/2 h-[62%] w-[62%] -translate-x-1/2 -translate-y-1/2 [backface-visibility:hidden]"
+                className="absolute left-1/2 top-1/2 h-[52%] w-[52%] -translate-x-1/2 -translate-y-1/2 [backface-visibility:hidden]"
                 style={{
                   transform: `rotateY(${itemAngle}deg) translateZ(${radius}px) rotateY(${-itemAngle - rotation}deg) scale(${scale})`,
                   opacity,
