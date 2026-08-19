@@ -16,46 +16,64 @@ interface CircularGalleryProps extends HTMLAttributes<HTMLDivElement> {
   items: GalleryItem[];
   /** Controls how far the items are from the center. */
   radius?: number;
-  /** Degrees per frame of auto-rotation. */
-  autoRotateSpeed?: number;
+  /** Milliseconds each plate stays in front before the next one steps in. */
+  holdDuration?: number;
+  /** Milliseconds the rotation between plates takes. */
+  transitionDuration?: number;
 }
 
 const CircularGallery = React.forwardRef<HTMLDivElement, CircularGalleryProps>(
-  ({ items, className, radius = 260, autoRotateSpeed = 0.25, ...props }, ref) => {
-    const [rotation, setRotation] = useState(0);
-    const frameRef = useRef<number | null>(null);
+  (
+    {
+      items,
+      className,
+      radius = 130,
+      holdDuration = 2600,
+      transitionDuration = 1100,
+      ...props
+    },
+    ref,
+  ) => {
+    const [step, setStep] = useState(0);
+    const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
     useEffect(() => {
-      const tick = () => {
-        setRotation((prev) => (prev + autoRotateSpeed) % 360);
-        frameRef.current = requestAnimationFrame(tick);
-      };
-      frameRef.current = requestAnimationFrame(tick);
+      timerRef.current = setInterval(
+        () => setStep((prev) => prev + 1),
+        holdDuration + transitionDuration,
+      );
       return () => {
-        if (frameRef.current) cancelAnimationFrame(frameRef.current);
+        if (timerRef.current) clearInterval(timerRef.current);
       };
-    }, [autoRotateSpeed]);
+    }, [holdDuration, transitionDuration]);
 
     const anglePerItem = 360 / items.length;
+    const rotation = -step * anglePerItem;
 
     return (
       <div
         ref={ref}
-        className={cn("relative h-full w-full [perspective:1200px]", className)}
+        className={cn(
+          "relative flex h-full w-full items-center justify-center [perspective:1200px]",
+          className,
+        )}
         {...props}
       >
         <div
           className="relative h-full w-full [transform-style:preserve-3d]"
-          style={{ transform: `rotateY(${rotation}deg)` }}
+          style={{
+            transform: `rotateY(${rotation}deg)`,
+            transition: `transform ${transitionDuration}ms cubic-bezier(0.65, 0, 0.35, 1)`,
+          }}
         >
           {items.map((item, i) => {
             const itemAngle = i * anglePerItem;
-            const relativeAngle = (itemAngle + rotation + 360) % 360;
-            const normalized = Math.abs(
-              relativeAngle > 180 ? 360 - relativeAngle : relativeAngle,
-            );
-            const opacity = Math.max(0.35, 1 - normalized / 180);
-            const scale = 0.75 + 0.25 * (1 - normalized / 180);
+            const relativeAngle = (itemAngle + rotation) % 360;
+            const wrapped = (relativeAngle + 360) % 360;
+            const normalized = wrapped > 180 ? 360 - wrapped : wrapped;
+            const isFront = normalized < 1;
+            const opacity = isFront ? 1 : 0.3;
+            const scale = isFront ? 1 : 0.8;
 
             return (
               <div
@@ -64,6 +82,7 @@ const CircularGallery = React.forwardRef<HTMLDivElement, CircularGalleryProps>(
                 style={{
                   transform: `rotateY(${itemAngle}deg) translateZ(${radius}px) rotateY(${-itemAngle - rotation}deg) scale(${scale})`,
                   opacity,
+                  transition: `opacity ${transitionDuration}ms ease, transform ${transitionDuration}ms cubic-bezier(0.65, 0, 0.35, 1)`,
                   zIndex: Math.round(1000 - normalized),
                 }}
               >
